@@ -17,7 +17,6 @@
 
 #include "utils.h"
 
-
 t_log* iniciar_logger(void);
 t_config* leer_config(void);
 void leer_consola(t_log*);
