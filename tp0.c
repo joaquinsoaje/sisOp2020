@@ -12,7 +12,7 @@
 
 int main(void)
 {
-	/*---------------------------------------------------PARTE 2-------------------------------------------------------------*/
+	/*------------------------------PARTE 2-------------------------------------------*/
 
 	int conexion;
 	char* ip;
@@ -24,26 +24,23 @@ int main(void)
 	t_config* config = leer_config();
 
 	//asignar valor de config a la variable valor
-	char* valor = config_get_string_value(config, "CLAVE");
-	log_info(logger, valor);
+	char* clave = config_get_string_value(config, "CLAVE");
+	log_info(logger, clave);
 
 	//Loggear valor de config
 
 	leer_consola(logger);
 
-	terminar_programa(1, logger, config);
-
-	log_info(logger, "Se borro todo");
-
-	return 0;
-
-	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
-
+	/*----------------------------------PARTE 3-------------------------------------------*/
 	//antes de continuar, tenemos que asegurarnos que el servidor esté corriendo porque lo necesitaremos para lo que sigue.
-
 	//crear conexion
+	conexion = crear_conexion(
+					config_get_string_value(config, "IP"),
+					config_get_string_value(config, "PUERTO")
+				);
 
-	//enviar CLAVE al servirdor
+	enviar_mensaje(clave, conexion);
+
 
 	paquete(conexion);
 
@@ -62,7 +59,6 @@ t_config* leer_config()
 
 void leer_consola(t_log* logger)
 {
-	//El primero te lo dejo de yapa
 	char* leido = readline(">");
 	if (strncmp(leido,"", 1) != 0) {
 		log_info(logger, leido);
@@ -74,16 +70,23 @@ void leer_consola(t_log* logger)
 
 void paquete(int conexion)
 {
-	//Ahora toca lo divertido!
+	t_paquete* paquete = crear_paquete();
 
-	char* leido;
-	t_paquete* paquete;
-
+	char* leido = readline(">");
+	if (strncmp(leido,"", 1) != 0) {
+		agregar_a_paquete(paquete, leido, strlen(leido)+1);
+		free(leido);
+	}
+	free(leido);
+	enviar_paquete(conexion, paquete);
+	return eliminar_paquete(paquete);
 }
 
 void terminar_programa(int conexion, t_log* logger, t_config* config)
 {
+	//Y por ultimo, para cerrar, hay que liberar lo que utilizamos (conexion, log y config) con las funciones de las commons y del TP mencionadas en el enunciado
 	log_destroy(logger);
 	config_destroy(config);
-	//Y por ultimo, para cerrar, hay que liberar lo que utilizamos (conexion, log y config) con las funciones de las commons y del TP mencionadas en el enunciado
+	liberar_conexion(conexion);
 }
+

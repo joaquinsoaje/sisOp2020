@@ -4,7 +4,6 @@
 .settings/
 *.log
 *.o
-tp0
 *~
 *.swp
 *swo
