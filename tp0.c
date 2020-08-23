@@ -41,7 +41,6 @@ int main(void)
 
 	enviar_mensaje(clave, conexion);
 
-
 	paquete(conexion);
 
 	terminar_programa(conexion, logger, config);
@@ -70,23 +69,26 @@ void leer_consola(t_log* logger)
 
 void paquete(int conexion)
 {
-	t_paquete* paquete = crear_paquete();
-
+	t_paquete* paquete = crear_super_paquete();
 	char* leido = readline(">");
+
 	if (strncmp(leido,"", 1) != 0) {
 		agregar_a_paquete(paquete, leido, strlen(leido)+1);
 		free(leido);
+		leido = readline(">");
 	}
+
 	free(leido);
 	enviar_paquete(conexion, paquete);
+
 	return eliminar_paquete(paquete);
 }
 
 void terminar_programa(int conexion, t_log* logger, t_config* config)
 {
 	//Y por ultimo, para cerrar, hay que liberar lo que utilizamos (conexion, log y config) con las funciones de las commons y del TP mencionadas en el enunciado
+	liberar_conexion(conexion);
 	log_destroy(logger);
 	config_destroy(config);
-	liberar_conexion(conexion);
 }
 
