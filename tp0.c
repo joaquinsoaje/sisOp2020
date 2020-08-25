@@ -14,35 +14,42 @@ int main(void)
 {
 	/*------------------------------PARTE 2-------------------------------------------*/
 
+	// Inicializo variables
 	int conexion;
 	char* ip;
 	char* puerto;
-
-	t_log* logger = iniciar_logger();
+	char* clave;
+	t_log logger;
+	t_config* config;
+ 
+	// Inicializo logger y logueo un primer texto
+	logger = iniciar_logger();
 	log_info(logger, "Soy un log");
 
-	t_config* config = leer_config();
+	// Inicializo config y muestro el valor que tiene de clave
+	config = leer_config();
 
-	//asignar valor de config a la variable valor
-	char* clave = config_get_string_value(config, "CLAVE");
+	clave = config_get_string_value(config, "CLAVE");
 	log_info(logger, clave);
 
-	//Loggear valor de config
-
+	// Dejo la consola esperando y guardando valores que el usuario ingrese
 	leer_consola(logger);
 
 	/*----------------------------------PARTE 3-------------------------------------------*/
-	//antes de continuar, tenemos que asegurarnos que el servidor esté corriendo porque lo necesitaremos para lo que sigue.
-	//crear conexion
+	
+	//crear conexion a servidor
 	conexion = crear_conexion(
 					config_get_string_value(config, "IP"),
 					config_get_string_value(config, "PUERTO")
 				);
 
+	// Se envia a servidor el valor de clave
 	enviar_mensaje(clave, conexion);
 
+	// Se guardan los valores que ingrese el usuario por consola y se envian al servidor
 	paquete(conexion);
 
+	// Por último, liberamos el programa de lo que estuvimos usando
 	terminar_programa(conexion, logger, config);
 }
 
@@ -86,7 +93,6 @@ void paquete(int conexion)
 
 void terminar_programa(int conexion, t_log* logger, t_config* config)
 {
-	//Y por ultimo, para cerrar, hay que liberar lo que utilizamos (conexion, log y config) con las funciones de las commons y del TP mencionadas en el enunciado
 	liberar_conexion(conexion);
 	log_destroy(logger);
 	config_destroy(config);
