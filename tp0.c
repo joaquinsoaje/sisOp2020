@@ -18,7 +18,7 @@ int main(void)
 	char* clave;
 	t_log* logger;
 	t_config* config;
- 
+
 	// Inicializo logger y logueo un primer texto
 	logger = iniciar_logger();
 	log_info(logger, "Soy un log");
@@ -44,7 +44,7 @@ int main(void)
 	enviar_mensaje(clave, conexion);
 
 	// Se guardan los valores que ingrese el usuario en paquete
-	armar_paquete(conexion);
+	paquete(conexion);
 
 	// Por último, liberamos el programa de lo que estuvimos usando
 	terminar_programa(conexion, logger, config);
@@ -69,7 +69,7 @@ void leer_consola(t_log* logger)
 
 }
 
-void armar_paquete(int conexion)
+void paquete(int conexion)
 {
 	// Se inicializa paquete
 	t_paquete* paquete = crear_super_paquete();
