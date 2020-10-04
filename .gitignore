@@ -1,0 +1,9 @@
+.cdproject
+.project
+.cproject
+.settings/
+*.log
+*.o
+*~
+*.swp
+*swo
